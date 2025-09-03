@@ -4,6 +4,10 @@ import type { GameState } from "./types"
 
 const statesFile = Bun.file(path.join(process.cwd(), "states.json"))
 
+if (!(await statesFile.exists())) {
+  await Bun.write(statesFile, JSON.stringify([]))
+}
+
 const get = async (id: string) => {
   const states = await statesFile
     .text()
