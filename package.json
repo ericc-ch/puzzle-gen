@@ -1,0 +1,43 @@
+{
+  "name": "pkg-placeholder",
+  "version": "0.0.0",
+  "description": "_description_",
+  "keywords": [
+    "pkg-placeholder"
+  ],
+  "homepage": "https://github.com/ericc-ch/pkg-placeholder",
+  "bugs": "https://github.com/ericc-ch/pkg-placeholder/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericc-ch/pkg-placeholder.git"
+  },
+  "author": {
+    "name": "Erick Christian",
+    "email": "erickchristian48@gmail.com"
+  },
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --cache",
+    "prepare": "simple-git-hooks",
+    "start": "bun src/main.ts",
+    "typecheck": "tsc"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged"
+  },
+  "lint-staged": {
+    "*": "pnpm run lint --fix"
+  },
+  "dependencies": {
+    "hono": "^4.9.6",
+    "mathjs": "^14.6.0"
+  },
+  "devDependencies": {
+    "@echristian/eslint-config": "^0.0.54",
+    "@types/bun": "^1.2.21",
+    "eslint": "^9.34.0",
+    "lint-staged": "^16.1.6",
+    "simple-git-hooks": "^2.13.1",
+    "typescript": "^5.9.2"
+  }
+}
