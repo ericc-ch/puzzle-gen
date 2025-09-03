@@ -33,6 +33,8 @@ export interface ScenarioResponse {
   }
 }
 
+export type GameStatus = "running" | "completed" | "failed"
+
 export interface GameState {
   meta: {
     gameId: string
@@ -40,6 +42,13 @@ export interface GameState {
     stats: ScenarioResponse["attributeStatistics"]
   }
 
+  status: GameStatus
+  failedReason?: string
+
+  currentPerson: {
+    index: number
+    attributes: Record<ScenarioAttributes, boolean>
+  }
   admitted: number
   rejected: number
 
@@ -48,6 +57,4 @@ export interface GameState {
     current: number
     target: number
   }>
-
-  lastPerson: Record<ScenarioAttributes, boolean> | null
 }

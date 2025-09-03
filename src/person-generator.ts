@@ -1,5 +1,6 @@
 import { create, all } from "mathjs"
 
+import type { AttributeStatistics } from "./stats-generator"
 import type { ScenarioAttributes } from "./types"
 
 const math = create(all)
@@ -15,12 +16,9 @@ export interface PersonAttributes {
  * @param correlations - How attributes relate to each other (-1 to 1)
  * @returns A person with binary attributes following the specified patterns
  */
-export function generatePerson(
-  relativeFrequencies: Record<ScenarioAttributes, number>,
-  correlations: Record<ScenarioAttributes, Record<ScenarioAttributes, number>>,
-): PersonAttributes {
+export function generatePerson(stats: AttributeStatistics): PersonAttributes {
   const attributes = Object.keys(
-    relativeFrequencies,
+    stats.relativeFrequencies,
   ) as Array<ScenarioAttributes>
   const numAttributes = attributes.length
 
@@ -29,7 +27,7 @@ export function generatePerson(
   for (let i = 0; i < numAttributes; i++) {
     const row = []
     for (let j = 0; j < numAttributes; j++) {
-      row.push(correlations[attributes[i]][attributes[j]])
+      row.push(stats.correlations[attributes[i]][attributes[j]])
     }
     correlationMatrix.push(row)
   }
@@ -53,7 +51,7 @@ export function generatePerson(
   const person: PersonAttributes = {}
   for (let i = 0; i < numAttributes; i++) {
     const attributeName = attributes[i]
-    const targetFrequency = relativeFrequencies[attributeName]
+    const targetFrequency = stats.relativeFrequencies[attributeName]
 
     // Find the threshold where P(random > threshold) = targetFrequency
     const threshold = inverseNormalCDF(1 - targetFrequency)
