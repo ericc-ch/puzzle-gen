@@ -2,9 +2,12 @@ import { Hono } from "hono"
 
 import type { GameState } from "./types"
 
-import { scenarios } from "./scenarios"
+import { scenarios, staticStats } from "./scenarios"
 import { states } from "./states"
 import { generateAttributeStatistics } from "./stats-generator"
+
+const PORT = process.env.PORT ?? 3000
+const STATIC = process.env.STATIC === "true"
 
 const app = new Hono()
 
@@ -29,8 +32,9 @@ app.get("/new-game", async (c) => {
     (constraint) => constraint.attribute,
   )
 
-  // Generate statistics for the scenario
-  const stats = generateAttributeStatistics(attributes)
+  // Generate or use static statistics for the scenario
+  const stats =
+    STATIC ? staticStats[scenario] : generateAttributeStatistics(attributes)
 
   // Create constraints with current: 0 and target from scenario
   const constraints = scenarioData.constraints.map((constraint) => ({
@@ -68,4 +72,7 @@ app.get("/decide-and-next", (c) => {
   return c.json({})
 })
 
-export default app
+export default {
+  fetch: app.fetch,
+  port: PORT,
+} satisfies Bun.Serve
